@@ -1,5 +1,5 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
-import os
+import os, socket
 
 app = Flask(__name__)
 
@@ -34,4 +34,6 @@ def result():
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
-    app.run(debug=True,host='localhost', port=4000)
+    host_name = socket.gethostname()
+    host_ip = socket.gethostbyname(host_name)
+    app.run(host_ip,'4000',debug=True)
