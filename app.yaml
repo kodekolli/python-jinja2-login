@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: helloapp-container
-        image: niranjankolli/eks-lab-demo:latest
+        image: niranjankolli/eks-demo-lab:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 4000
