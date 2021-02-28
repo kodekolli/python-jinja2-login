@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>My Page</title>
+ </head>
+ <body>
+  <form action="/result" method="post">
+   {% if name %}
+   <h2>welcome {{name}}: </h2>
+   <p>Course Name <input type = "text" name = "Course Name" /></p>
+   <p>Duration <input type = "text" name = "Duration" /></p>
+   <p>Interested <input type = "checkbox" name = "Interested" /></p>
+   <input type="submit" value="Click to proceed">
+  </form>
+  {% endif %}
+ </body>
+</html>
