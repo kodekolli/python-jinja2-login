@@ -37,7 +37,7 @@ def result():
         app.config['MYSQL_PASSWORD'] = 'welcome'
         app.config['MYSQL_DB'] = 'mysql'
 
-        mysql = mysql(app)
+        mysql = MySQL(app)
         # Creating a connection cursor
         cursor = mysql.connection.cursor()
 
