@@ -22,22 +22,8 @@ def do_admin_login():
     if request.form['password'] == 'password':
         session['logged_in'] = True
         print('Login success')
-        return render_template('index.html', name=fname)
-    else:
-        print('wrong password!')
-        return home()
-
-@app.route("/logout")
-def logout():
-    session['logged_in'] = False
-    return home()
-
-@app.route('/result',methods = ['POST', 'GET'])
-def result():
-    if request.method == 'POST':
-        result = request.form
-
-        # Creating a connection cursor
+        
+         # Creating a connection cursor
         cursor = mysql.connection.cursor()
 
         cursor.execute("SHOW TABLES")
@@ -57,6 +43,20 @@ def result():
             mysql.connection.commit()
             cur.close()
             return 'success'
+        return render_template('index.html', name=fname)
+    else:
+        print('wrong password!')
+        return home()
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return home()
+
+@app.route('/result',methods = ['POST', 'GET'])
+def result():
+    if request.method == 'POST':
+        result = request.form
         return render_template("result.html",result = result)
 
 if __name__ == "__main__":
