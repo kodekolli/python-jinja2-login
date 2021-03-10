@@ -42,7 +42,10 @@ def result():
 
         cursor.execute("SHOW TABLES")
         for x in cursor:
-            cursor.execute("CREATE TABLE students(curname VARCHAR(255), duration VARCHAR(255), interested VARCHAR(255))")
+            if x == "students":
+                print("Table exists")
+            else:
+                cursor.execute("CREATE TABLE students(curname VARCHAR(255), duration VARCHAR(255), interested VARCHAR(255))")
 
         if request.method == "POST":
             details = request.form
