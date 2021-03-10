@@ -3,6 +3,11 @@ import os, socket
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
+app.config['MYSQL_HOST'] = 'wordpress-mysql'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'welcome'
+app.config['MYSQL_DB'] = 'mysql'
+mysql = MySQL(app)
 
 @app.route('/')
 def home():
@@ -32,12 +37,6 @@ def result():
     if request.method == 'POST':
         result = request.form
 
-        app.config['MYSQL_HOST'] = 'wordpress-mysql'
-        app.config['MYSQL_USER'] = 'root'
-        app.config['MYSQL_PASSWORD'] = 'welcome'
-        app.config['MYSQL_DB'] = 'mysql'
-
-        mysql = MySQL(app)
         # Creating a connection cursor
         cursor = mysql.connection.cursor()
 
