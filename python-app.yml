@@ -4,7 +4,19 @@
   vars:
     ansible_python_interpreter: '/bin/python3'
 
-  tasks: 
+  tasks:
+    - name: Create Mysql Secret
+      community.kubernetes.k8s:
+        state: present
+        definition:
+          kind: Secret
+          apiVersion: v1
+          metadata:
+            name: mysql-pass
+            namespace: default
+          data:
+            password: d2VsY29tZQ==
+          type: Opaque
     - name: Deploy MySQL storageClass
       community.kubernetes.k8s:
         state: present
