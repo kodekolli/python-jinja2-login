@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   become: yes
+  vars:
+    ansible_python_interpreter: '/bin/python3'
 
   tasks: 
     - name: Deploy MySQL storageClass
@@ -22,6 +24,7 @@
           apiVersion: v1
           kind: PersistentVolumeClaim
           metadata:
+            namespace: default
             name: mysql-pv-claim
             labels:
               app: mysql
@@ -39,6 +42,7 @@
           apiVersion: v1
           kind: Service
           metadata:
+            namespace: default
             name: python-mysql
             labels:
               app: mysql
@@ -55,6 +59,7 @@
           apiVersion: apps/v1
           kind: Deployment
           metadata:
+            namespace: default
             name: python-mysql
             labels:
               app: mysql
@@ -95,6 +100,7 @@
           apiVersion: v1
           kind: Service
           metadata:
+            namespace: default
             name: helloapp-svc
             labels:
                 app: helloapp
@@ -114,6 +120,7 @@
           apiVersion: apps/v1
           kind: Deployment
           metadata:
+            namespace: default
             name: hello-app
           spec:
             replicas: 1
@@ -127,22 +134,22 @@
                 labels:
                   app: helloapp
                   version: green
-            spec:
-              containers:
-              - name: helloapp-container
-                env:
-                - name: MYSQL_HOST
-                  value: wordpress-mysql
-                - name: MYSQL_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: mysql-pass
-                      key: password
-                - name: MYSQL_USER
-                  value: root
-                - name: MYSQL_DB
-                  value: mysql
-                image: niranjankolli/eks-demo-lab:latest
-                imagePullPolicy: Always
-                ports:
-                  - containerPort: 4000
+              spec:
+                containers:
+                - name: helloapp-container
+                  env:
+                  - name: MYSQL_HOST
+                    value: python-mysql
+                  - name: MYSQL_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: mysql-pass
+                        key: password
+                  - name: MYSQL_USER
+                    value: root
+                  - name: MYSQL_DB
+                    value: mysql
+                  image: niranjankolli/eks-demo-lab:latest
+                  imagePullPolicy: Always
+                  ports:
+                    - containerPort: 4000
