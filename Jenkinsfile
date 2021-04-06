@@ -9,7 +9,6 @@ pipeline {
         USER_CREDENTIALS = credentials('DockerHub')
         registryCredential = 'DockerHub'
         dockerImage = ''
-        K8S_AUTH_KUBECONFIG=$HOME/.kube/devconfig
     }
 
     stages {
