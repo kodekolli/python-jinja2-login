@@ -42,7 +42,7 @@ pipeline {
                         git url:"https://github.com/${params.git_user}/python-jinja2-login.git", branch:'main'
                         sh "/opt/sonarscanner/bin/sonar-scanner \
                         -Dsonar.projectKey=python-login \
-                        -Dsonar.projectBaseDir=$PWD \
+                        -Dsonar.projectBaseDir=/var/lib/jenkins/workspace/$JOB_NAME/python-jinja2-login \
                         -Dsonar.sources=. \
                         -Dsonar.language=py \
                         -Dsonar.host.url=http://${host}:9000 \
