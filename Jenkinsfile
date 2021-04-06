@@ -29,6 +29,7 @@ pipeline {
             steps {
                 checkout scm
                 echo 'branch name ' + env.BRANCH_NAME
+                sh 'printenv'
             }
         }
         stage('Code Quality Check - SonarQube') {
