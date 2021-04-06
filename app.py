@@ -33,7 +33,7 @@ def do_admin_login():
             mysql.connection.commit()
             return render_template('index.html', name=fname)
         else:
-            print("User exist, Login with username password")
+            print("User exist, Login with username & password")
             cursor.execute("select password from login where username='%s'" %(fname))
             mypwd = cursor.fetchall()
             for x in mypwd:
