@@ -88,7 +88,7 @@ pipeline {
                     dir('python-jinja2-login'){
                         echo "Building docker image"
                         echo "Deploy app to EKS cluster"
-                        sh 'ansible-playbook python-app.yml --user jenkins -e action=present'
+                        sh 'ansible-playbook python-app.yml --user jenkins -e action=present -e config=$HOME/.kube/devconfig'
                         sleep 10
                         sh 'export APPELB=$(kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")'
                     }
