@@ -27,9 +27,7 @@ pipeline {
         }
         stage('checkout') {
             steps {
-                checkout scm
-                echo 'branch name ' + env.BRANCH_NAME
-                sh 'printenv'
+                checkout scm       
             }
         }
         stage('Code Quality Check - SonarQube') {
@@ -63,6 +61,7 @@ pipeline {
             when { branch 'development' }
             steps {
                 script {
+                    sh 'printenv'
                     dir('python-jinja2-login'){
                         echo "Building docker image"
                         dockerImage = docker.build("${USER_CREDENTIALS_USR}/eks-demo-lab:${env.BUILD_ID}")
