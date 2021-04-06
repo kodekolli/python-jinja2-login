@@ -28,6 +28,7 @@ pipeline {
         stage('checkout') {
             steps {
                 checkout scm
+                echo 'branch name ' + env.BRANCH_NAME
             }
         }
         stage('Code Quality Check - SonarQube') {
