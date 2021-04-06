@@ -66,8 +66,8 @@ pipeline {
                         echo "Building docker image"                        
                         dockerImage = docker.build("${USER_CREDENTIALS_USR}/eks-demo-lab:${env.BUILD_ID}")
                         echo "Scanning the image for vulnerabilities"
-                        echo "${dockerImage}"
-                        sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL $dockerImage'
+                        echo dockerImage.id
+                        sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${dockerImage.id}"
                     }
                 }
             }
