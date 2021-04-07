@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('clone repo') {
             steps {
-                git url:"https://github.com/${params.git_user}/eks-demo-project.git", branch:'test'
+                git url:"https://github.com/${params.git_user}/python-jinja2-login.git", branch:'test'
             }
         }
         stage('Deploying sample app to Test EKS cluster') {
