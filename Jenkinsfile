@@ -1,6 +1,6 @@
 pipeline {
     parameters {
-        string(name: 'git_user', defaultValue: 'kodekolli', description: 'Enter github username')
+        string(name: 'git_user', defaultValue: 'kodekolli', description: 'Enter github username:')
     }
 
     agent any
