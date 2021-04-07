@@ -12,7 +12,7 @@ pipeline {
     }
 
     stages {
-        stage('Retrieve SONAR creds from vault'){
+        stage('Retrieve SONAR credentials from vault'){
             steps {
                 script {
                     def host=sh(script: 'curl http://169.254.169.254/latest/meta-data/public-ipv4', returnStdout: true)
