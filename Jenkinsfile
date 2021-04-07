@@ -16,11 +16,7 @@ pipeline {
             }
         }
         stage('Deploying sample app to Test EKS cluster') {
-            when {
-                anyof {
-                    branch 'test'
-                }
-            }       
+            when { branch 'test' }       
             steps {
                 script{
                     dir('python-jinja2-login'){
