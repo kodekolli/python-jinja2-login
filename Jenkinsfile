@@ -19,19 +19,17 @@ pipeline {
             when { branch 'test' }       
             steps {
                 script{
-                    dir('python-jinja2-login'){
-                        echo "Building docker image"
-                        dockerImage = docker.build("${USER_CREDENTIALS_USR}/eks-demo-lab:${env.BUILD_ID}")
-                        echo "Pushing the image to registry"
-                        docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-                            dockerImage.push("latest")
-                            dockerImage.push("${env.BUILD_ID}")
-                        }
-                        echo "Deploy app to EKS cluster"
-                        sh 'ansible-playbook python-app.yml --user jenkins -e action=present -e config=$HOME/.kube/testconfig'
-                        sleep 10
-                        sh 'export APPELB=$(kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")'
+                    echo "Building docker image"
+                    dockerImage = docker.build("${USER_CREDENTIALS_USR}/eks-demo-lab:${env.BUILD_ID}")
+                    echo "Pushing the image to registry"
+                    docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+                        dockerImage.push("latest")
+                        dockerImage.push("${env.BUILD_ID}")
                     }
+                    echo "Deploy app to EKS cluster"
+                    sh 'ansible-playbook python-app.yml --user jenkins -e action=present -e config=$HOME/.kube/testconfig'
+                    sleep 10
+                    sh 'export APPELB=$(kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")'
                 }
             }
             post {
