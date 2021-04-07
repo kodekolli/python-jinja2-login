@@ -18,10 +18,7 @@ pipeline {
         stage('Deploying sample app to Test EKS cluster') {
             when {
                 anyof {
-                    branch 'test';
-                    branch 'qa';
-                    branch 'perf';
-                    branch 'staging'
+                    branch 'test'
                 }
             }       
             steps {
