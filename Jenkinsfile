@@ -57,6 +57,24 @@ pipeline {
                 }
             }
         }
+        stage('Source-Composition-Analysis'){
+            when { branch 'development' }
+            steps {
+                sh 'rm owasp* || true'
+                sh 'wget "https://raw.githubusercontent.com/cehkunal/webapp/master/owasp-dependency-check.sh" '
+                sh 'chmod +x owasp-dependency-check.sh'
+                sh 'bash owasp-dependency-check.sh'
+                sh 'cat /var/lib/jenkins/OWASP-Dependency-Check/reports/dependency-check-report.xml'
+            }
+        }
+        stage('check Git secrets'){
+            when { branch 'development' }
+            steps {
+                sh 'rm trufflehog || true'
+                sh 'docker run gesellix/trufflehog --json https://github.com/cehkunal/webapp.git > trufflehog'
+                sh 'cat trufflehog'
+            }
+        }
         stage('Build docker image and scan vulnerabilities'){
             when { branch 'development' }
             steps {
@@ -67,7 +85,7 @@ pipeline {
                         dockerImage = docker.build("${USER_CREDENTIALS_USR}/eks-demo-lab:${env.BUILD_ID}")
                         echo "Scanning the image for vulnerabilities"
                         echo dockerImage.id
-                        sh "trivy image --severity HIGH,CRITICAL ${dockerImage.id}"
+                        sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${dockerImage.id}"
                     }
                 }
             }
