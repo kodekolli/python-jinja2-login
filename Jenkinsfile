@@ -30,7 +30,7 @@ pipeline {
                 checkout scm       
             }
         }
-        stage('Code Quality Check - SonarQube') {
+        stage('Code Quality Check - SonarQube testing') {
             when { branch 'development' } 
             steps {
                 script {
