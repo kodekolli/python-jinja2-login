@@ -37,7 +37,7 @@ pipeline {
                     dir('python-jinja2-login'){
                         def host=sh(script: 'curl http://169.254.169.254/latest/meta-data/public-ipv4', returnStdout: true)
                         echo "$host"
-                        git url:"https://github.com/${params.git_user}/python-jinja2-login.git", branch:'main'
+                        git url:"https://github.com/${params.git_user}/python-jinja2-login.git", branch:'development'
                         sh "/opt/sonarscanner/bin/sonar-scanner \
                         -Dsonar.projectKey=python-login \
                         -Dsonar.projectBaseDir=$WORKSPACE/python-jinja2-login \
@@ -60,18 +60,20 @@ pipeline {
         stage('Source-Composition-Analysis'){
             when { branch 'development' }
             steps {
-                sh 'rm owasp* || true'
-                sh 'wget "https://raw.githubusercontent.com/cehkunal/webapp/master/owasp-dependency-check.sh" '
-                sh 'chmod +x owasp-dependency-check.sh'
-                sh 'bash owasp-dependency-check.sh'
-                sh 'cat /var/lib/jenkins/OWASP-Dependency-Check/reports/dependency-check-report.xml'
+                dir('python-jinja2-login') {
+                    sh 'rm owasp* || true'
+                    sh 'wget "https://raw.githubusercontent.com/kodekolli/python-jinja2-login/development/owasp-dependency-check.sh" '
+                    sh 'chmod +x owasp-dependency-check.sh'
+                    sh 'bash owasp-dependency-check.sh'
+                    sh 'cat /var/lib/jenkins/OWASP-Dependency-Check/reports/dependency-check-report.xml'
+                }
             }
         }
         stage('check Git secrets'){
             when { branch 'development' }
             steps {
                 sh 'rm trufflehog || true'
-                sh 'docker run gesellix/trufflehog --json https://github.com/cehkunal/webapp.git > trufflehog'
+                sh "docker run gesellix/trufflehog --json https://github.com/${params.git_user}/python-jinja2-login.git > trufflehog"
                 sh 'cat trufflehog'
             }
         }
