@@ -16,11 +16,7 @@ pipeline {
             }
         }
         stage('Deploying sample app to PROD EKS cluster') {
-            when {
-                anyof {
-                    branch 'production'
-                }
-            }       
+            when { branch 'production' }       
             steps {
                 script{
                     dir('python-jinja2-login'){
