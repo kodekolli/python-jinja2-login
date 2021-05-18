@@ -100,6 +100,23 @@ pipeline {
                 }
             }
         }
+        stage('Repo obfuscation using pyarmor'){
+            when { branch 'development' } 
+            steps {
+                script{
+                    echo "Obfuscating the repo"
+                    sh 'pyarmor obfuscate app.py'                    
+                }
+            }
+            post {
+                success {
+                    echo "Sample app deployed to Dev EKS cluster."
+                }
+                failure {
+                    echo "Sample app deployment failed to Dev EKS cluster."
+                }
+            }
+        }
         stage('Deploying sample application to Dev EKS cluster') {
             when { branch 'development' } 
             steps {
@@ -119,6 +136,6 @@ pipeline {
                     echo "Sample app deployment failed to Dev EKS cluster."
                 }
             }
-        }       
+        }
     }
 }
