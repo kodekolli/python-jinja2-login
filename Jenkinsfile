@@ -29,7 +29,7 @@ pipeline {
                     echo "Deploy app to EKS cluster"
                     sh 'ansible-playbook python-app.yml --user jenkins -e action=present -e config=$HOME/.kube/qaconfig'
                     sleep 10
-                    sh 'export APPELB=$(kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" --kubeconfig=qaconfig)'
+                    def APPELB=$('kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" --kubeconfig=$HOME/.kube/qaconfig')
                 }
             }
             post {
