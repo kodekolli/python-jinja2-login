@@ -29,7 +29,6 @@ pipeline {
                     echo "Deploy app to EKS cluster"
                     sh 'ansible-playbook python-app.yml --user jenkins -e action=present -e config=$HOME/.kube/qaconfig'
                     sleep 10
-                    def APPELB=$('kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" --kubeconfig=$HOME/.kube/qaconfig')
                 }
             }
             post {
@@ -43,8 +42,12 @@ pipeline {
         }
         stage('DAST testing using OWASP ZAP') {
             steps {
-                sh "sudo mkdir -p ${pwd}/reports"
-                sh "docker run --detach --name zap -v ${pwd}/reports:/zap/reports/:rw -i owasp/zap2docker-stable zap-baseline.py -t http://${APPELB}"
+                sh "sudo mkdir -p ${WORKSPACE}/reports"
+                sh "sudo chmod -R 777 ${WORKSPACE}/reports"
+                sh '''#!/bin/bash
+                ELB=$(kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" --kubeconfig=$HOME/.kube/qaconfig)
+                docker run -v ${WORKSPACE}/reports:/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -r app.html -t http://$ELB || true
+                '''
             }
         }
     }
