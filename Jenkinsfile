@@ -43,7 +43,7 @@ pipeline {
         }
         stage('DAST testing using OWASP ZAP') {
             steps {
-                sh "mkdir -p ${pwd}/reports"
+                sh "sudo mkdir -p ${pwd}/reports"
                 sh "docker run --detach --name zap -v ${pwd}/reports:/zap/reports/:rw -i owasp/zap2docker-stable zap-baseline.py -t http://${APPELB}"
             }
         }
