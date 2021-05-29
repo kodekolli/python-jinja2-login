@@ -1,1 +1,1 @@
-# python-jinja2-login project
+# python-jinja2-login for multibranch setup
