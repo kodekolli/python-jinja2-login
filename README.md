@@ -1,1 +1,1 @@
-# python-jinja2-login sample app for multibranch pipeline.
+# python-jinja2-login sample application for multibranch pipeline setup
