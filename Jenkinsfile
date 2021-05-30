@@ -1,6 +1,7 @@
 pipeline {
     parameters {
         string(name: 'git_user', defaultValue: 'kodekolli', description: 'Enter github username:')
+        choice(name: 'action', choices: 'deploy\ndelete', description: 'Action to deploy or delete sample app to EKS cluster')
     }
 
     agent any
@@ -16,7 +17,7 @@ pipeline {
             }
         }
         stage('Deploying sample app to Test EKS cluster') {
-            when { branch 'test' }       
+            when { expression { params.action == 'deploy' } }
             steps {
                 script{
                     echo "Building docker image"
@@ -41,6 +42,7 @@ pipeline {
             }
         }
         stage('DAST testing using OWASP ZAP') {
+            when { expression { params.action == 'deploy' } }
             steps {
                 sh "sudo mkdir -p ${WORKSPACE}/reports"
                 sh "sudo chmod -R 777 ${WORKSPACE}/reports"
@@ -48,6 +50,13 @@ pipeline {
                 ELB=$(kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" --kubeconfig=$HOME/.kube/qaconfig)
                 docker run -v ${WORKSPACE}/reports:/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -r app.html -t http://$ELB || true
                 '''
+            }
+        }
+        stage('Delete sample application from Test EKS cluster'){
+            when { expression { params.action == 'delete' } }
+            steps {
+                echo "Deleting the app from Test EKS cluster"
+                sh 'ansible-playbook python-app.yml --user jenkins -e action=absent -e config=$HOME/.kube/devconfig'
             }
         }
     }
