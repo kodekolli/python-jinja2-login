@@ -3,12 +3,13 @@
   become: yes
   vars:
     ansible_python_interpreter: '/bin/python3'
-  
+
 
   tasks:
     - name: Create Mysql Secret
       community.kubernetes.k8s:
         state: "{{ action }}"
+        kubeconfig: "{{ config }}"
         definition:
           kind: Secret
           apiVersion: v1
@@ -21,6 +22,7 @@
     - name: Deploy MySQL storageClass
       community.kubernetes.k8s:
         state: "{{ action }}"
+        kubeconfig: "{{ config }}"
         definition:
           kind: StorageClass
           apiVersion: storage.k8s.io/v1
@@ -33,6 +35,7 @@
     - name: Deploy PVC
       community.kubernetes.k8s:
         state: "{{ action }}"
+        kubeconfig: "{{ config }}"
         definition:
           apiVersion: v1
           kind: PersistentVolumeClaim
@@ -51,6 +54,7 @@
     - name: Deploy MySQL service
       community.kubernetes.k8s:
         state: "{{ action }}"
+        kubeconfig: "{{ config }}"
         definition:
           apiVersion: v1
           kind: Service
@@ -68,6 +72,7 @@
     - name: Deploy MySQL app
       community.kubernetes.k8s:
         state: "{{ action }}"
+        kubeconfig: "{{ config }}"
         definition:
           apiVersion: apps/v1
           kind: Deployment
@@ -109,6 +114,7 @@
     - name: Deploy python-login service
       community.kubernetes.k8s:
         state: "{{ action }}"
+        kubeconfig: "{{ config }}"
         definition:
           apiVersion: v1
           kind: Service
@@ -129,6 +135,7 @@
     - name: Deploy Python app.
       community.kubernetes.k8s:
         state: "{{ action }}"
+        kubeconfig: "{{ config }}"
         definition:
           apiVersion: apps/v1
           kind: Deployment
