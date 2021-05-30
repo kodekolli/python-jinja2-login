@@ -28,7 +28,7 @@ def do_admin_login():
         cursor.execute("CREATE TABLE IF NOT EXISTS login(username VARCHAR(255), password VARCHAR(255))")
         chkuser = cursor.execute("select username from login where username='%s'" %(fname))
         if chkuser == 0:
-            print("User does not exist, creating the user.")
+            print("User does not exist,creating the user.")
             cursor.execute("INSERT INTO login (username, password) VALUES (%s, %s)",(fname, fpwd))
             mysql.connection.commit()
             return render_template('index.html', name=fname)
