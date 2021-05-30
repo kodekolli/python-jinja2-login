@@ -141,7 +141,7 @@ pipeline {
         stage('Delete sample application from Dev EKS cluster'){
             when { expression { params.action == 'delete' } }
             steps {
-                echo "Deleting the app from EKS cluster"
+                echo "Deleting the app from Dev EKS cluster"
                 sh 'ansible-playbook python-app.yml --user jenkins -e action=absent -e config=$HOME/.kube/devconfig'
             }
         }
