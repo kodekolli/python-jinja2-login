@@ -1,6 +1,7 @@
 pipeline {
     parameters {
         string(name: 'git_user', defaultValue: 'kodekolli', description: 'Enter github username')
+        choice(name: 'action', choices: 'deploy\ndelete', description: 'Action to deploy or delete sample app to EKS cluster')
     }
 
     agent any
@@ -16,7 +17,7 @@ pipeline {
             }
         }
         stage('Deploying sample app to PROD EKS cluster') {
-            when { branch 'production' }       
+            when { expression { params.action == 'deploy' } }       
             steps {
                 script{
                     echo "Building docker image"
@@ -39,6 +40,13 @@ pipeline {
                 failure {
                     echo "Sample app deployment failed to PROD EKS cluster."
                 }
+            }
+        }
+        stage('Delete sample application from Prod EKS cluster'){
+            when { expression { params.action == 'delete' } }
+            steps {
+                echo "Deleting the app from Prod EKS cluster"
+                sh 'ansible-playbook python-app.yml --user jenkins -e action=absent -e config=$HOME/.kube/devconfig'
             }
         }
     }
