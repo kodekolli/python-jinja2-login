@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('clone prod repo') {
             steps {
-                git url:"https://github.com/${params.git_user}/python-jinja2-login.git", branch:'prod'
+                git url:"https://github.com/${params.git_user}/python-jinja2-login.git", branch:'production'
             }
         }
         stage('Deploying sample app to PROD EKS cluster') {
