@@ -1,6 +1,7 @@
 pipeline {
     parameters {
         string(name: 'git_user', defaultValue: 'kodekolli', description: 'Enter github username')
+        choice(name: 'action', choices: 'deploy\ndelete', description: 'Action to deploy or delete sample app to EKS cluster')
     }
 
     agent any
@@ -13,6 +14,7 @@ pipeline {
 
     stages {
         stage('Retrieve SONAR credentials from vault'){
+            when { expression { params.action == 'deploy' } }
             steps {
                 script {
                     def host=sh(script: 'curl http://169.254.169.254/latest/meta-data/public-ipv4', returnStdout: true)
@@ -31,6 +33,7 @@ pipeline {
             }
         }
         stage('Code Quality Check - SonarQube testing') {
+            when { expression { params.action == 'deploy' } }
             when { branch 'development' } 
             steps {
                 script {
@@ -58,6 +61,7 @@ pipeline {
             }
         }
         stage('Source-Composition-Analysis'){
+            when { expression { params.action == 'deploy' } }
             when { branch 'development' }
             steps {
                 dir('python-jinja2-login') {
@@ -78,6 +82,7 @@ pipeline {
             }
         }
         stage('Build docker image and scan vulnerabilities'){
+            when { expression { params.action == 'deploy' } }
             when { branch 'development' }
             steps {
                 script {
@@ -101,6 +106,7 @@ pipeline {
             }
         }
         stage('Repo obfuscation using pyarmor'){
+            when { expression { params.action == 'deploy' } }
             when { branch 'development' } 
             steps {
                 script{
@@ -118,10 +124,10 @@ pipeline {
             }
         }
         stage('Deploying sample application to Dev EKS cluster') {
+            when { expression { params.action == 'deploy' } }
             when { branch 'development' } 
             steps {
                 script{
-                    echo "Building docker image"
                     echo "Deploy app to EKS cluster"
                     sh 'ansible-playbook python-app.yml --user jenkins -e action=present -e config=$HOME/.kube/devconfig'
                     sleep 10
@@ -135,6 +141,13 @@ pipeline {
                 failure {
                     echo "Sample app deployment failed to Dev EKS cluster."
                 }
+            }
+        }
+        stage('Delete sample application from Dev EKS cluster'){
+            when { expression { params.action == 'delete' } }
+            steps {
+                echo "Deleting the app from EKS cluster"
+                sh 'ansible-playbook python-app.yml --user jenkins -e action=absent -e config=$HOME/.kube/devconfig'
             }
         }
     }
