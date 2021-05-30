@@ -72,6 +72,7 @@ pipeline {
             }
         }
         stage('check Git secrets'){
+            when { expression { params.action == 'deploy' } }
             steps {
                 sh 'rm trufflehog || true'
                 sh "docker run gesellix/trufflehog --json https://github.com/${params.git_user}/python-jinja2-login.git > trufflehog"
