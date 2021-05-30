@@ -28,7 +28,7 @@ pipeline {
                             dockerImage.push("${env.BUILD_ID}")
                         }
                         echo "Deploy app to EKS cluster"
-                        sh 'ansible-playbook python-app.yml --user jenkins -e action=present -e config=$HOME/.kube/testconfig'
+                        sh 'ansible-playbook python-app.yml --user jenkins -e action=present -e config=$HOME/.kube/prodconfig'
                         sleep 10
                         sh 'export APPELB=$(kubectl get svc -n default helloapp-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")'
                     }
@@ -36,10 +36,10 @@ pipeline {
             }
             post {
                 success {
-                    echo "Sample app deployed to Dev EKS cluster."
+                    echo "Sample app deployed to PROD EKS cluster."
                 }
                 failure {
-                    echo "Sample app deployment failed to Dev EKS cluster."
+                    echo "Sample app deployment failed to PROD EKS cluster."
                 }
             }
         }
