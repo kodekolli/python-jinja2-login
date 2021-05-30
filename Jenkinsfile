@@ -34,7 +34,6 @@ pipeline {
         }
         stage('Code Quality Check - SonarQube testing') {
             when { expression { params.action == 'deploy' } }
-            when { branch 'development' } 
             steps {
                 script {
                     dir('python-jinja2-login'){
@@ -62,7 +61,6 @@ pipeline {
         }
         stage('Source-Composition-Analysis'){
             when { expression { params.action == 'deploy' } }
-            when { branch 'development' }
             steps {
                 dir('python-jinja2-login') {
                     sh 'rm owasp* || true'
@@ -74,7 +72,6 @@ pipeline {
             }
         }
         stage('check Git secrets'){
-            when { branch 'development' }
             steps {
                 sh 'rm trufflehog || true'
                 sh "docker run gesellix/trufflehog --json https://github.com/${params.git_user}/python-jinja2-login.git > trufflehog"
@@ -83,7 +80,6 @@ pipeline {
         }
         stage('Build docker image and scan vulnerabilities'){
             when { expression { params.action == 'deploy' } }
-            when { branch 'development' }
             steps {
                 script {
                     sh 'printenv'
@@ -107,7 +103,6 @@ pipeline {
         }
         stage('Repo obfuscation using pyarmor'){
             when { expression { params.action == 'deploy' } }
-            when { branch 'development' } 
             steps {
                 script{
                     echo "Obfuscating the repo"
@@ -125,7 +120,6 @@ pipeline {
         }
         stage('Deploying sample application to Dev EKS cluster') {
             when { expression { params.action == 'deploy' } }
-            when { branch 'development' } 
             steps {
                 script{
                     echo "Deploy app to EKS cluster"
