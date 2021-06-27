@@ -7,7 +7,7 @@
 
   tasks:
     - name: Create Mysql Secret
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: "{{ action }}"
         kubeconfig: "{{ config }}"
         definition:
@@ -20,7 +20,7 @@
             password: d2VsY29tZQ==
           type: Opaque
     - name: Deploy MySQL storageClass
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: "{{ action }}"
         kubeconfig: "{{ config }}"
         definition:
@@ -33,7 +33,7 @@
             type: gp2
             fsType: ext4
     - name: Deploy PVC
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: "{{ action }}"
         kubeconfig: "{{ config }}"
         definition:
@@ -52,7 +52,7 @@
                 storage: 20Gi
             storageClassName: staging
     - name: Deploy MySQL service
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: "{{ action }}"
         kubeconfig: "{{ config }}"
         definition:
@@ -70,7 +70,7 @@
               app: mysql
             clusterIP: None
     - name: Deploy MySQL app
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: "{{ action }}"
         kubeconfig: "{{ config }}"
         definition:
@@ -112,7 +112,7 @@
                   persistentVolumeClaim:
                     claimName: mysql-pv-claim
     - name: Deploy python-login service
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: "{{ action }}"
         kubeconfig: "{{ config }}"
         definition:
@@ -133,7 +133,7 @@
                 port: 80
                 targetPort: 4000
     - name: Deploy Python app.
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: "{{ action }}"
         kubeconfig: "{{ config }}"
         definition:
