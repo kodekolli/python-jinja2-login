@@ -6,17 +6,17 @@
 
   tasks:
   - name: Create Mysql Secret
-      kubernetes.core.k8s:
-        state: "{{ action }}"
-        kubeconfig: "{{ config }}"
-        definition:
-          kind: Secret
-          apiVersion: v1
-          metadata:
-            name: mysql-pass
-            namespace: default
-          data:
-            password: d2VsY29tZQ==
+    kubernetes.core.k8s:
+      state: "{{ action }}"
+      kubeconfig: "{{ config }}"
+      definition:
+        kind: Secret
+        apiVersion: v1
+        metadata:
+          name: mysql-pass
+          namespace: default
+        data:
+          password: d2VsY29tZQ==
           type: Opaque
     - name: Deploy MySQL storageClass
       kubernetes.core.k8s:
